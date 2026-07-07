@@ -27,7 +27,7 @@ if (env.googleClientId && env.googleClientSecret) {
       {
         clientID: env.googleClientId,
         clientSecret: env.googleClientSecret,
-        callbackURL: "/auth/google/callback"
+        callbackURL: env.googleCallbackUrl
       },
       async (_accessToken, _refreshToken, profile, done) => {
         try {

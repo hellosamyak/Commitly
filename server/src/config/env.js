@@ -7,6 +7,7 @@ export const env = {
   clientOrigin: process.env.CLIENT_ORIGIN || "http://localhost:5173",
   databaseUrl: process.env.DATABASE_URL || "",
   sessionSecret: process.env.SESSION_SECRET || "dev-secret",
+  googleCallbackUrl: process.env.GOOGLE_CALLBACK_URL || "http://localhost:4000/auth/google/callback",
   googleClientId: process.env.GOOGLE_CLIENT_ID || "",
   googleClientSecret: process.env.GOOGLE_CLIENT_SECRET || ""
 };
