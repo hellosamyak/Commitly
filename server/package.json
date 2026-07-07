@@ -5,7 +5,6 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon src/index.js",
-    "build": "npm run migrate",
     "start": "node src/index.js",
     "migrate": "node scripts/migrate.js"
   },
