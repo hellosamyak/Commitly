@@ -1,36 +1,25 @@
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
-import pg from "pg";
 import dotenv from "dotenv";
+import { pool } from "../src/db/pool.js";
+import { runMigrations } from "../src/db/migrate.js";
 
 dotenv.config();
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const migrationPath = path.join(__dirname, "../src/db/migrations/001_init.sql");
-
-const databaseUrl = process.env.DATABASE_URL;
-if (!databaseUrl) {
+if (!process.env.DATABASE_URL) {
   console.error("DATABASE_URL is missing in server/.env");
   process.exit(1);
 }
 
-const sql = fs.readFileSync(migrationPath, "utf8");
-
-const client = new pg.Client({ connectionString: databaseUrl });
-
 try {
-  await client.connect();
-  await client.query(sql);
+  await runMigrations();
   console.log("Migration completed successfully.");
 } catch (err) {
   console.error("Migration failed:", err.message);
   if (err.code === "3D000") {
     console.error(
-      'Database does not exist. Create it first (pgAdmin or: createdb -U postgres productivity_contributions)'
+      "Database does not exist. Create it first (pgAdmin or: createdb -U postgres productivity_contributions)"
     );
   }
-  process.exit(1);
+  process.exitCode = 1;
 } finally {
-  await client.end();
+  await pool.end();
 }
