@@ -1,5 +1,5 @@
-import { Link, Navigate } from "react-router-dom";
-import { ArrowRight, BarChart3, Flame, Grid3x3, Sparkles, Target } from "lucide-react";
+import { Link, Navigate, useSearchParams } from "react-router-dom";
+import { AlertCircle, ArrowRight, BarChart3, Flame, Grid3x3, Sparkles, Target } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { getGoogleAuthUrl } from "../api";
 import LoadingSpinner from "../components/ui/LoadingSpinner";
@@ -19,6 +19,8 @@ function MockHeatmap() {
 
 export default function HomePage() {
   const { user, loading } = useAuth();
+  const [searchParams] = useSearchParams();
+  const authError = searchParams.get("authError");
 
   if (loading) return <LoadingSpinner label="Loading..." />;
   if (user) return <Navigate to="/dashboard" replace />;
@@ -42,6 +44,16 @@ export default function HomePage() {
               Log study, focus, reading, and work sessions. Commitly turns your effort into a contribution heatmap with
               transparent hybrid scoring you can trust.
             </p>
+
+            {authError === "google" && (
+              <div className="mt-5 flex max-w-xl items-start gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/70 dark:bg-red-950/40 dark:text-red-200">
+                <AlertCircle className="mt-0.5 shrink-0" size={18} />
+                <p>
+                  Google sign-in is not available right now. The OAuth client needs to be recreated and connected to
+                  this deployment.
+                </p>
+              </div>
+            )}
 
             <div className="mt-8 flex flex-wrap gap-3">
               <a href={getGoogleAuthUrl()} className="btn-primary px-5 py-3">
@@ -83,3 +95,4 @@ function FeatureCard({ icon: Icon, title, text }) {
     </article>
   );
 }
+
