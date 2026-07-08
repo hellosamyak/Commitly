@@ -25,6 +25,8 @@ export const api = {
     }
     return response.json();
   },
+  signup: (payload) => request("/auth/signup", { method: "POST", body: JSON.stringify(payload) }),
+  login: (payload) => request("/auth/login", { method: "POST", body: JSON.stringify(payload) }),
   logout: () => request("/auth/logout", { method: "POST" }),
   getHeatmap: () => request("/scores/heatmap"),
   getToday: () => request("/scores/today"),
@@ -41,3 +43,4 @@ export const api = {
 export function getGoogleAuthUrl() {
   return `${API_BASE_URL}/auth/google`;
 }
+

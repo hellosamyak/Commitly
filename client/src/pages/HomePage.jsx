@@ -1,7 +1,6 @@
 import { Link, Navigate, useSearchParams } from "react-router-dom";
 import { AlertCircle, ArrowRight, BarChart3, Flame, Grid3x3, Sparkles, Target } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
-import { getGoogleAuthUrl } from "../api";
 import LoadingSpinner from "../components/ui/LoadingSpinner";
 
 const LEVEL_COLORS = ["#ebedf0", "#9be9a8", "#40c463", "#30a14e", "#216e39"];
@@ -56,9 +55,12 @@ export default function HomePage() {
             )}
 
             <div className="mt-8 flex flex-wrap gap-3">
-              <a href={getGoogleAuthUrl()} className="btn-primary px-5 py-3">
-                Get started with Google <ArrowRight size={16} />
-              </a>
+              <Link to="/auth?mode=signup" className="btn-primary px-5 py-3">
+                Create account <ArrowRight size={16} />
+              </Link>
+              <Link to="/auth?mode=signin" className="btn-ghost border border-slate-200 dark:border-slate-700">
+                Sign in
+              </Link>
               <Link to="/about" className="btn-ghost border border-slate-200 dark:border-slate-700">
                 How scoring works
               </Link>
@@ -95,4 +97,5 @@ function FeatureCard({ icon: Icon, title, text }) {
     </article>
   );
 }
+
 

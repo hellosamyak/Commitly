@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS users (
   email TEXT NOT NULL UNIQUE,
   display_name TEXT,
   avatar_url TEXT,
+  password_hash TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   UNIQUE(oauth_provider, oauth_provider_user_id)
@@ -53,5 +54,8 @@ CREATE TABLE IF NOT EXISTS daily_scores (
   UNIQUE(user_id, score_date)
 );
 
+ALTER TABLE users ADD COLUMN IF NOT EXISTS password_hash TEXT;
+
 CREATE INDEX IF NOT EXISTS idx_sessions_user_started_at ON sessions(user_id, started_at DESC);
 CREATE INDEX IF NOT EXISTS idx_daily_scores_user_date ON daily_scores(user_id, score_date DESC);
+

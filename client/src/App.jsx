@@ -4,6 +4,7 @@ import { ThemeProvider } from "./context/ThemeContext";
 import AppLayout from "./components/layout/AppLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AboutPage from "./pages/AboutPage";
+import AuthPage from "./pages/AuthPage";
 import DashboardPage from "./pages/DashboardPage";
 import HistoryPage from "./pages/HistoryPage";
 import HomePage from "./pages/HomePage";
@@ -19,6 +20,7 @@ export default function App() {
             <Route element={<AppLayout />}>
               <Route path="/" element={<HomePage />} />
               <Route path="/about" element={<AboutPage />} />
+              <Route path="/auth" element={<AuthPage />} />
               <Route
                 path="/dashboard"
                 element={
@@ -59,3 +61,4 @@ export default function App() {
     </ThemeProvider>
   );
 }
+
