@@ -1,17 +1,24 @@
 import { Router } from "express";
 import passport from "passport";
+import { env } from "../config/env.js";
 
 const router = Router();
 
 router.get("/google", passport.authenticate("google", { scope: ["profile", "email"] }));
 
-router.get(
-  "/google/callback",
-  passport.authenticate("google", { failureRedirect: "/auth/failure", session: true }),
-  (req, res) => {
-    res.redirect(process.env.CLIENT_ORIGIN || "http://localhost:5173");
-  }
-);
+router.get("/google/callback", (req, res, next) => {
+  passport.authenticate("google", (err, user) => {
+    if (err || !user) {
+      if (err) console.error("Google OAuth callback failed:", err.message);
+      return res.redirect(`${env.clientOrigin}?authError=google`);
+    }
+
+    return req.logIn(user, (loginErr) => {
+      if (loginErr) return next(loginErr);
+      return res.redirect(env.clientOrigin);
+    });
+  })(req, res, next);
+});
 
 router.get("/me", (req, res) => {
   if (!req.user) return res.status(401).json({ authenticated: false });
@@ -38,3 +45,5 @@ router.post("/logout", (req, res, next) => {
 });
 
 export default router;
+
+

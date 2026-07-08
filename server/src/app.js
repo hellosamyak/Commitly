@@ -37,12 +37,12 @@ if (env.googleClientId && env.googleClientSecret) {
 
           const upsert = await pool.query(
             `INSERT INTO users (oauth_provider, oauth_provider_user_id, email, display_name, avatar_url)
-             VALUES ('google', $1, $2, $3, $4)
-             ON CONFLICT (oauth_provider, oauth_provider_user_id)
-             DO UPDATE SET email = EXCLUDED.email,
-                           display_name = EXCLUDED.display_name,
-                           avatar_url = EXCLUDED.avatar_url,
-                           updated_at = NOW()
+            VALUES ('google', $1, $2, $3, $4)
+            ON CONFLICT (oauth_provider, oauth_provider_user_id)
+            DO UPDATE SET email = EXCLUDED.email,
+                          display_name = EXCLUDED.display_name,
+                          avatar_url = EXCLUDED.avatar_url,
+                          updated_at = NOW()
              RETURNING *`,
             [profile.id, email, displayName, avatarUrl]
           );
@@ -56,6 +56,11 @@ if (env.googleClientId && env.googleClientSecret) {
 }
 
 const app = express();
+const isProduction = env.nodeEnv === "production";
+
+if (isProduction) {
+  app.set("trust proxy", 1);
+}
 
 app.use(
   cors({
@@ -69,7 +74,11 @@ app.use(
     secret: env.sessionSecret,
     resave: false,
     saveUninitialized: false,
+    proxy: isProduction,
     cookie: {
+      httpOnly: true,
+      sameSite: isProduction ? "none" : "lax",
+      secure: isProduction,
       maxAge: 1000 * 60 * 60 * 24 * 14
     }
   })
